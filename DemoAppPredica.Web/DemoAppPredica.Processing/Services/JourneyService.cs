@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using DemoAppPredica.Data.Interfaces;
 using DemoAppPredica.Models.Models.Journeys;
 using DemoAppPredica.Processing.Interfaces;
 
@@ -8,29 +10,36 @@ namespace DemoAppPredica.Processing.Services
 {
     public class JourneyService : IJourneyService
     {
+        private readonly IJourneyRepository _journeyRepository;
+
+        public JourneyService(IJourneyRepository journeyRepository)
+        {
+            _journeyRepository = journeyRepository;
+        }
+
         public void CreateJourney(Journey journey)
         {
-            throw new NotImplementedException();
+            _journeyRepository.CreateJourney(journey);
         }
 
         public void DeleteJourney(int journeyId)
         {
-            throw new NotImplementedException();
+            _journeyRepository.DeleteJourney(journeyId);
         }
 
         public List<Journey> GetAllJourneys()
         {
-            throw new NotImplementedException();
+            return _journeyRepository.GetAllJourneys().ToList();
         }
 
         public List<Journey> GetUserJourneys(Guid userId)
         {
-            throw new NotImplementedException();
+            return _journeyRepository.GetUserJourneys(userId).ToList();
         }
 
         public void UpdateJourney(int journeyId, Journey journey)
         {
-            throw new NotImplementedException();
+            _journeyRepository.UpdateJourney(journeyId, journey);
         }
     }
 }

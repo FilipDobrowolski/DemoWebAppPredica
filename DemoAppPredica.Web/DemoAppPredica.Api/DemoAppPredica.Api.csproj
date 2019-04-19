@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DemoAppPredica.Models\DemoAppPredica.Models.csproj" />
+    <ProjectReference Include="..\DemoAppPredica.Processing\DemoAppPredica.Processing.csproj" />
   </ItemGroup>
 
 </Project>
