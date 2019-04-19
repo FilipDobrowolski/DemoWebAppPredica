@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DemoAppPredica.Data.Interfaces;
 using DemoAppPredica.Models.Models.Journeys;
@@ -8,29 +9,37 @@ namespace DemoAppPredica.Data.Repositories
 {
     public class JourneyRepository : IJourneyRepository
     {
+        private readonly CustomDbContext _context;
+
+        public JourneyRepository(CustomDbContext context)
+        {
+            _context = context;
+        }
         public void CreateJourney(Journey journey)
         {
-            throw new NotImplementedException();
+            _context.Journeys.Add(journey);
         }
 
         public void DeleteJourney(int journeyId)
         {
-            throw new NotImplementedException();
+            Journey journeyToDelete = _context.Journeys.First(journey => journey.Id == journeyId);
+            journeyToDelete.IsValid = false;
+            _context.Journeys.Update(journeyToDelete);
         }
 
         public IEnumerable<Journey> GetAllJourneys()
         {
-            throw new NotImplementedException();
+            return _context.Journeys;
         }
 
         public IEnumerable<Journey> GetUserJourneys(Guid userId)
         {
-            throw new NotImplementedException();
+            return _context.Journeys.Where(journey => journey.UserId == userId);
         }
 
         public void UpdateJourney(int journeyId, Journey journey)
         {
-            throw new NotImplementedException();
+            _context.Journeys.Update(journey);
         }
     }
 }
