@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoAppPredica.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/journeys")]
     [ApiController]
     public class JourneysController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace DemoAppPredica.Api.Controllers
             return _journeyService.GetAllJourneys();
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         public List<Journey> GetUserJourneys(Guid userId)
         {
             return _journeyService.GetUserJourneys(userId);

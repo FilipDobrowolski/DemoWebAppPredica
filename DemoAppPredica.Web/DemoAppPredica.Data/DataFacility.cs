@@ -13,7 +13,7 @@ namespace DemoAppPredica.Data
         public static IServiceCollection Register(IServiceCollection services)
         {
             services.AddScoped<IJourneyRepository, JourneyRepository>();
-            
+            services.AddScoped<CustomDbContext>();
             return services;
         }
     }
