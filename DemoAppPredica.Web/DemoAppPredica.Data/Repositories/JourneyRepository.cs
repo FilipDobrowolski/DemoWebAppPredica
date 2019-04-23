@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DemoAppPredica.Data.Interfaces;
 using DemoAppPredica.Models.Models.Journeys;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoAppPredica.Data.Repositories
 {
@@ -24,7 +25,8 @@ namespace DemoAppPredica.Data.Repositories
         {
             Journey journeyToDelete = _context.Journeys.First(journey => journey.Id == journeyId);
             journeyToDelete.IsValid = false;
-            _context.Journeys.Update(journeyToDelete);
+            _context.Journeys.Attach(journeyToDelete);
+            _context.SaveChanges();
         }
 
         public IEnumerable<Journey> GetAllJourneys()
@@ -32,14 +34,21 @@ namespace DemoAppPredica.Data.Repositories
             return _context.Journeys;
         }
 
+        public Journey GetJourneyById(int journeyId)
+        {
+            return _context.Journeys.FirstOrDefault(journey => journey.Id == journeyId);
+        }
+
         public IEnumerable<Journey> GetUserJourneys(Guid userId)
         {
             return _context.Journeys.Where(journey => journey.UserId == userId);
         }
 
-        public void UpdateJourney(int journeyId, Journey journey)
+        public void UpdateJourney(Journey journey)
         {
-            _context.Journeys.Update(journey);
+            _context.Journeys.Attach(journey);
+            _context.Entry(journey).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

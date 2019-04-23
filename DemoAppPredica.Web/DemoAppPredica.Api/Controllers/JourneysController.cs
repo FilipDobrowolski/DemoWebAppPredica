@@ -26,36 +26,38 @@ namespace DemoAppPredica.Api.Controllers
         [HttpGet]
         public IActionResult GetAllJourneys()
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var journeys = _journeyService.GetAllJourneys();
             return Ok(journeys);
+        }
+
+        [HttpGet("id")]
+        public IActionResult GetJourneyById(int journeyId)
+        {
+            var journey = _journeyService.GetJourneyById(journeyId);
+            return Ok(journey);
         }
 
         [HttpGet("user/{userId}")]
         public List<Journey> GetUserJourneys(Guid userId)
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _journeyService.GetUserJourneys(userId);
         }
 
         [HttpPost]
         public void CreateJourney([FromBody] Journey journey)
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _journeyService.CreateJourney(journey);
         }
 
-        [HttpPut("{journeyId}")]
-        public void UpdateJourney(int journeyId, [FromBody] Journey journey)
+        [HttpPut]
+        public void UpdateJourney([FromBody] Journey journey)
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            _journeyService.UpdateJourney(journeyId, journey);
+            _journeyService.UpdateJourney(journey);
         }
 
         [HttpDelete("{journeyId}")]
         public void DeleteJourney(int journeyId)
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _journeyService.DeleteJourney(journeyId);
         }
     }

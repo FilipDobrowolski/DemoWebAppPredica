@@ -10,8 +10,9 @@ namespace DemoAppPredica.Data.Interfaces
     {
         IEnumerable<Journey> GetAllJourneys();
         IEnumerable<Journey> GetUserJourneys(Guid userId);
+        Journey GetJourneyById(int journeyId);
         void CreateJourney(Journey journey);
-        void UpdateJourney(int journeyId, Journey journey);
+        void UpdateJourney(Journey journey);
         void DeleteJourney(int journeyId);
         
     }

@@ -17,6 +17,11 @@ namespace DemoAppPredica.Processing.Services
             _journeyRepository = journeyRepository;
         }
 
+        public Journey GetJourneyById(int journeyId)
+        {
+            return _journeyRepository.GetJourneyById(journeyId);
+        }
+
         public void CreateJourney(Journey journey)
         {
             _journeyRepository.CreateJourney(journey);
@@ -37,9 +42,9 @@ namespace DemoAppPredica.Processing.Services
             return _journeyRepository.GetUserJourneys(userId).ToList();
         }
 
-        public void UpdateJourney(int journeyId, Journey journey)
+        public void UpdateJourney(Journey journey)
         {
-            _journeyRepository.UpdateJourney(journeyId, journey);
+            _journeyRepository.UpdateJourney(journey);
         }
     }
 }

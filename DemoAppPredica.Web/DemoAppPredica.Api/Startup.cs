@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DemoAppPredica.Api.Extensions;
 using DemoAppPredica.Data;
 using DemoAppPredica.Processing;
 using Microsoft.AspNetCore.Builder;

@@ -4,25 +4,23 @@
     ViewBag.Title = "To Do List";
 }
 
-<h3>Add an Item</h3>
+<h3>Database journeys List</h3>
 
-@if (ViewBag.ErrorMessage == null)
-{
-    <form name="input" method="post">
-        New Item: <input type="text" name="item">
-        <input type="submit" value="Submit">
-    </form>
-}
 
 <table class="table table-bordered table-striped">
     <tr>
         <th>Item Name</th>
     </tr>
-    @foreach (var i in Model)
+    @foreach (var journey in Model)
     {
-        <tr>
-            <td>@i.DestinationCountry</td>
-        </tr>
+    <tr>
+        <td>@journey.DestinationCountry</td>
+        <td>@journey.Cost</td>
+        <td>@journey.Name</td>
+        <td>
+        @Html.ActionLink("Edit", "Edit", new { journeyId=@journey.Id })
+        </td>
+    </tr>
     }
 </table>
 

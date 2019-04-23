@@ -1,0 +1,49 @@
+﻿@model DemoAppPredica.Models.Models.Journeys.Journey
+
+@{
+    ViewBag.Title = "Edit journey";
+}
+
+<h3>Journey Editor</h3>
+
+@using (Html.BeginForm("Update","Journeys",FormMethod.Post))
+{
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Destination Country</th>
+        </tr>
+        <tr>
+            <td>@Html.TextBoxFor(model => model.DestinationCountry)  </td>
+        </tr>
+        <tr>
+            <th>Cost</th>
+        </tr>
+        <tr>
+            <td>@Html.TextBoxFor(model => model.Cost)  </td>
+        </tr>
+        <tr>
+            <th>Name</th>
+        </tr>
+        <tr>
+            <td>@Html.TextBoxFor(model => model.Name)  </td>
+            <td>@Html.TextBoxFor(m => m.Id, new { style = "display: none;" })</td>
+            <td>@Html.TextBoxFor(m => m.IsValid, new { style = "display: none;" })</td>
+            <td>@Html.TextBoxFor(m => m.UserId, new { style = "display: none;" })</td>
+        </tr>
+        <tr>
+            <th>Update</th>
+        </tr>
+    </table>
+    <button type="submit">Update</button>
+}
+   
+
+    @if (ViewBag.ErrorMessage == "AuthorizationRequired")
+    {
+        <p>You have to sign-in to see your to do list. Click @Html.ActionLink("here", "Index", "Journeys", new { reauth = true }, null) to sign-in.</p>
+    }
+
+    @if (ViewBag.ErrorMessage == "UnexpectedError")
+    {
+        <p>An unexpected error occurred while retrieving your to do list.  Please try again.  You may need to sign-in.</p>
+    }

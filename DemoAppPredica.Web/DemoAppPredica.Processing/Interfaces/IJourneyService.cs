@@ -10,8 +10,9 @@ namespace DemoAppPredica.Processing.Interfaces
 
         List<Journey> GetAllJourneys();
         List<Journey> GetUserJourneys(Guid userId);
+        Journey GetJourneyById(int journeyId);
         void CreateJourney(Journey journey);
-        void UpdateJourney(int journeyId, Journey journey);
+        void UpdateJourney(Journey journey);
         void DeleteJourney(int journeyId);
 
     }
