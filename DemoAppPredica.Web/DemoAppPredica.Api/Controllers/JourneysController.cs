@@ -37,7 +37,7 @@ namespace DemoAppPredica.Api.Controllers
             return Ok(journey);
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("user")]
         public List<Journey> GetUserJourneys(Guid userId)
         {
             return _journeyService.GetUserJourneys(userId);

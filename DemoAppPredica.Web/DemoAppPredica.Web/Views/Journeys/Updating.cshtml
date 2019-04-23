@@ -61,7 +61,7 @@
 </table>
 @if (ViewBag.ErrorMessage == "AuthorizationRequired")
 {
-    <p>You have to sign-in to see your to do list. Click @Html.ActionLink("here", "Index", "Journeys", new { reauth = true }, null) to sign-in.</p>
+    <p>You have to sign-in to see your to do list. Click @Html.ActionLink("here", "Updating", "Journeys", new { reauth = true }, null) to sign-in.</p>
 }
 
 @if (ViewBag.ErrorMessage == "UnexpectedError")

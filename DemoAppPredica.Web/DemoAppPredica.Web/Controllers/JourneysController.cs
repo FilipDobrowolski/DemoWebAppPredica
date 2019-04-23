@@ -43,21 +43,7 @@ namespace DemoAppPredica.Web.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    List<Dictionary<String, String>> responseElements = new List<Dictionary<String, String>>();
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    String responseString = await response.Content.ReadAsStringAsync();
-                    responseElements = JsonConvert.DeserializeObject<List<Dictionary<String, String>>>(responseString, settings);
-                    foreach (Dictionary<String, String> responseElement in responseElements)
-                    {
-                        Journey newItem = new Journey();
-                        newItem.DestinationCountry = responseElement["destinationCountry"];
-                        newItem.Name = responseElement["name"];
-                        newItem.Id = Int32.Parse(responseElement["id"]);
-                        newItem.IsValid = Boolean.Parse(responseElement["isValid"]);
-                        newItem.Cost = Int32.Parse(responseElement["cost"]);
-                        newItem.UserId = Guid.Parse(responseElement["userId"]);
-                        itemList.Add(newItem);
-                    }
+                    await DeserializeReponseJourneyList(response, itemList);
 
                     return View(itemList);
                 }
@@ -73,20 +59,33 @@ namespace DemoAppPredica.Web.Controllers
                     //
                     return new ChallengeResult(OpenIdConnectDefaults.AuthenticationScheme);
                 }
-                //
-                // The user needs to re-authorize.  Show them a message to that effect.
-                //
-                Journey newItem = new Journey();
-                newItem.DestinationCountry = "(Sign-in required to view to do list.)";
-                itemList.Add(newItem);
-                ViewBag.ErrorMessage = "AuthorizationRequired";
-                return View(itemList);
+
+                return BadRequest();
             }
 
             //
             // If the call failed for any other reason, show the user an error.
             //
             return View("Error");
+        }
+
+        private static async Task DeserializeReponseJourneyList(HttpResponseMessage response, List<Journey> itemList)
+        {
+            List<Dictionary<String, String>> responseElements = new List<Dictionary<String, String>>();
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            String responseString = await response.Content.ReadAsStringAsync();
+            responseElements = JsonConvert.DeserializeObject<List<Dictionary<String, String>>>(responseString, settings);
+            foreach (Dictionary<String, String> responseElement in responseElements)
+            {
+                Journey newItem = new Journey();
+                newItem.DestinationCountry = responseElement["destinationCountry"];
+                newItem.Name = responseElement["name"];
+                newItem.Id = Int32.Parse(responseElement["id"]);
+                newItem.IsValid = Boolean.Parse(responseElement["isValid"]);
+                newItem.Cost = Int32.Parse(responseElement["cost"]);
+                newItem.UserId = Guid.Parse(responseElement["userId"]);
+                itemList.Add(newItem);
+            }
         }
 
         [Authorize(Roles = "Writer")]
@@ -107,28 +106,13 @@ namespace DemoAppPredica.Web.Controllers
                 result = await authContext.AcquireTokenSilentAsync(AzureAdOptions.Settings.DemoPredicaAppApiResourceId, credential, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
 
                 HttpClient client = new HttpClient();
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, AzureAdOptions.Settings.DemoPredicaAppApiBaseAddress + $"/api/journeys/user/userId={userObjectID}");
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, AzureAdOptions.Settings.DemoPredicaAppApiBaseAddress + $"/api/journeys/user?userId={userObjectID}");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
                 HttpResponseMessage response = await client.SendAsync(request);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    List<Dictionary<String, String>> responseElements = new List<Dictionary<String, String>>();
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    String responseString = await response.Content.ReadAsStringAsync();
-                    responseElements = JsonConvert.DeserializeObject<List<Dictionary<String, String>>>(responseString, settings);
-                    foreach (Dictionary<String, String> responseElement in responseElements)
-                    {
-                        Journey newItem = new Journey();
-                        newItem.DestinationCountry = responseElement["destinationCountry"];
-                        newItem.Name = responseElement["name"];
-                        newItem.Id = Int32.Parse(responseElement["id"]);
-                        newItem.IsValid = Boolean.Parse(responseElement["isValid"]);
-                        newItem.Cost = Int32.Parse(responseElement["cost"]);
-                        newItem.UserId = Guid.Parse(responseElement["userId"]);
-
-                        itemList.Add(newItem);
-                    }
+                    await DeserializeReponseJourneyList(response, itemList);
 
                     return View(itemList);
                 }
@@ -144,14 +128,8 @@ namespace DemoAppPredica.Web.Controllers
                     //
                     return new ChallengeResult(OpenIdConnectDefaults.AuthenticationScheme);
                 }
-                //
-                // The user needs to re-authorize.  Show them a message to that effect.
-                //
-                Journey newItem = new Journey();
-                newItem.DestinationCountry = "(Sign-in required to view to do list.)";
-                itemList.Add(newItem);
-                ViewBag.ErrorMessage = "AuthorizationRequired";
-                return View(itemList);
+
+                return BadRequest();
             }
 
             //
@@ -189,19 +167,7 @@ namespace DemoAppPredica.Web.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Dictionary<String, String> responseElements = new Dictionary<String, String>();
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    String responseString = await response.Content.ReadAsStringAsync();
-                    responseElements =
-                        JsonConvert.DeserializeObject<Dictionary<String, String>>(responseString, settings);
-
-                        Journey newItem = new Journey();
-                        newItem.DestinationCountry = responseElements["destinationCountry"];
-                        newItem.Name = responseElements["name"];
-                        newItem.Id = Int32.Parse(responseElements["id"]);
-                        newItem.IsValid = Boolean.Parse(responseElements["isValid"]);
-                        newItem.Cost = Int32.Parse(responseElements["cost"]);
-                        newItem.UserId = Guid.Parse(responseElements["userId"]);
+                    var newItem = await DeserializeResponseJourneyObject(response);
 
                     return View(newItem);
                 }
@@ -230,6 +196,24 @@ namespace DemoAppPredica.Web.Controllers
             // If the call failed for any other reason, show the user an error.
             //
             return View("Error");
+        }
+
+        private static async Task<Journey> DeserializeResponseJourneyObject(HttpResponseMessage response)
+        {
+            Dictionary<String, String> responseElements = new Dictionary<String, String>();
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            String responseString = await response.Content.ReadAsStringAsync();
+            responseElements =
+                JsonConvert.DeserializeObject<Dictionary<String, String>>(responseString, settings);
+
+            Journey newItem = new Journey();
+            newItem.DestinationCountry = responseElements["destinationCountry"];
+            newItem.Name = responseElements["name"];
+            newItem.Id = Int32.Parse(responseElements["id"]);
+            newItem.IsValid = Boolean.Parse(responseElements["isValid"]);
+            newItem.Cost = Int32.Parse(responseElements["cost"]);
+            newItem.UserId = Guid.Parse(responseElements["userId"]);
+            return newItem;
         }
 
         [Authorize(Roles = "Admin, Writer")]
